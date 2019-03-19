@@ -118,9 +118,9 @@ Exec = /usr/bin/bootctl update" > /etc/pacman.d/hooks/100-systemd-boot.hook
 
 Setup accounts:
 passwd
-useradd -m username
+useradd -m -G wheel username
 passwd username
-vi /etc/sudoers -> copy the "root ALL=(ALL) ALL" line and replace "root" by your username
+vi /etc/sudoers -> uncomment the "%wheel ALL=(ALL) ALL" line
 
 exit
 umount -R /mnt

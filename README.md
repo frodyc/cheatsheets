@@ -2,7 +2,7 @@
 
 ## Arch setup
 
-The aim of this cheat sheet is to speed up Arch installations. The idea is to use tmux to copy and paste several commands at a time (you could also make the file a script). If you know what you are doing, this should also reduce the risk of making mistakes (typo, forgetting a command).
+The aim of this cheat sheet is to speed up Arch installations. The idea is to use tmux to copy and paste several commands at a time. If you know what you are doing, this should also reduce the risk of making mistakes (typo, forgetting a command).
 
 I would advise against running any of these commands if you don't know what they do. You should at least have read the following wiki articles before doing part 1:
 
