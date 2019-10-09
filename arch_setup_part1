@@ -1,4 +1,4 @@
-Make bootable USB:
+Make a bootable USB:
 sudo dd bs=4M if=archlinux-*.iso of=/dev/sdX status=progress oflag=sync
 
 In the BIOS:
@@ -6,36 +6,37 @@ disable Secure boot, enable UEFI mode
 
 Once booted:
 loadkeys fr-latin9
+("ls /usr/share/kbd/keymaps/**/*.map.gz" to list available layouts)
 
-Make sure you have Internet
+Make sure you have Internet access
 I advise you to use tmux so you can have this file next to your command prompt
 and can copy and paste blocks of commands (delimited by ```)
 
 Download this file
-wget https://raw.githubusercontent.com/demivi/cheatsheets/master/arch_setup
+wget https://raw.githubusercontent.com/demivi/cheatsheets/master/arch_setup_part1
 
 Change relevant parts of this file beforehand if you want to copy and paste:
--size of partitions
+-size and number of LVM groups
 -name of devices (here main device is /dev/sda)
 -name of partitions (here /dev/sda1 for /boot and /dev/sda2 for /)
 -country in curl command to get the mirrorlist
--timezone region and city
--locale settings
--keymap settings
+-timezone region and city ("ls /usr/share/zoneinfo/" for a list of available ones)
+-locale settings (available ones in "/etc/locale.gen")
+-keymap settings (same as the loadkeys command before)
 -hostname
 -username
 
 Install tmux:
 pacman -Sy tmux
 
-In case you don't know tmux, do the following:
+In case you don't know tmux or aren't familiar with the default bindings, do the following:
 - tmux -> start tmux
 - Ctrl-b % -> split screen into 2 panes
 - cat this file
 - ctrl-b [ -> copy mode (you can move around with the arrow keys/vim controls, ctrl-u / ctrl-d)
-- ctrl-b o switch back to prompt pane
+- ctrl-b o -> switch back to prompt pane
 
-Start cfdisk utility:
+Start the cfdisk utility:
 cfdisk /dev/sda
 
 Delete everything and create the following partitions
@@ -43,7 +44,7 @@ Boot partition: New -> 256M -> Type -> EFI System
 Main partition: New -> the rest -> Type -> Linux filesystem
 Write then exit
 
-Setup LUKS container:
+Setup a LUKS container:
 cryptsetup luksFormat --type luks2 /dev/sda2
 cryptsetup open /dev/sda2 name
 
@@ -56,7 +57,7 @@ Now you can start copying and pasting by:
 - hitting Enter
 - Ctrl-b o to switch to prompt pane
 - Ctrl-b ] to paste
-- once every command is done, go back to first step
+- once every command is done, go back to the first step
 
 ```
 pvcreate /dev/mapper/name
@@ -88,8 +89,9 @@ sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 echo 'KEYMAP=fr-latin9' > /etc/vconsole.conf
-echo 'myhostname' > /etc/hostname
-echo -e '127.0.0.1 localhost\n::1 localhost\n127.0.1.1 myhostname' > /etc/hosts
+machine_name='myhostname'
+echo "$machine_name" > /etc/hostname
+echo -e "127.0.0.1 localhost\n::1 localhost\n127.0.1.1 $machine_name" > /etc/hosts
 sed -i 's/^HOOKS.*/HOOKS=(base udev autodetect keyboard keymap modconf block encrypt lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 bootctl --path=/boot install
