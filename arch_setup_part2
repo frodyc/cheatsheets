@@ -1,0 +1,40 @@
+This part shows how to configure encryption on a secondary drive.
+You can apply the same principle to any number of drives.
+We will store a keyfile on the main drive to decrypt the secondary drive at boot.
+
+(As a reminder, blocks of commands delimited by ``` can be copy/pasted)
+
+Start a root shell first:
+sudo bash
+
+Then define a few variables (the first one MUST match your actual drive name):
+```
+drive_name="sdb"
+keyfile_name="hddkeyfile"
+mapping_name="hddcrypt"
+mount_point="/hdd"
+```
+
+To allow recovery if the main drive fails, define a known passphrase on the LUKS container:
+cryptsetup luksFormat --type luks2 /dev/"$drive_name"
+
+Open the LUKS container and format to ext4:
+cryptsetup open /dev/"$drive_name" "$mapping_name"
+mkfs.ext4 /dev/mapper/"$mapping_name"
+
+Keyfile setup:
+```
+cryptsetup close "$mapping_name"
+dd bs=512 count=4 if=/dev/urandom of=/etc/"$keyfile_name" iflag=fullblock
+chmod 600 /etc/"$keyfile_name"
+cryptsetup luksAddKey /dev/"$drive_name" /etc/"$keyfile_name"
+```
+
+Auto decryption and mount at boot:
+```
+UUID=$(lsblk -f | grep "$drive_name " | awk '{print $3}')
+echo "$mapping_name UUID=$UUID /etc/$keyfile_name" >> /etc/crypttab
+echo "/dev/mapper/$mapping_name $mount_point ext4 defaults 0 2" >> /etc/fstab
+```
+
+Now reboot, your drive should be decrypted and mounted on $mount_point
