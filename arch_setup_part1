@@ -52,7 +52,7 @@ Write then exit
 
 Setup a LUKS container:
 cryptsetup luksFormat --type luks2 /dev/sda2
-cryptsetup open /dev/sda2 name
+cryptsetup open /dev/sda2 luks
 
 Now you can start copying and pasting by:
 - ctrl-b o switch back to this pane
@@ -66,8 +66,8 @@ Now you can start copying and pasting by:
 - once every command is done, go back to the first step
 
 ```
-pvcreate /dev/mapper/name
-vgcreate lvmgroup /dev/mapper/name
+pvcreate /dev/mapper/luks
+vgcreate lvmgroup /dev/mapper/luks
 lvcreate -L 8G lvmgroup -n swap
 lvcreate -L 50G lvmgroup -n root
 lvcreate -l 100%FREE lvmgroup -n home
