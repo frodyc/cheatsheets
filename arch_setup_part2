@@ -7,7 +7,7 @@ We will store a keyfile on the main drive to decrypt the secondary drive at boot
 Start a root shell first:
 sudo bash
 
-Then define a few variables (the first one MUST match your actual drive name):
+Then define a few variables (first one MUST match your actual drive name, rest is arbitrary):
 ```
 drive_name="sdb"
 keyfile_name="hddkeyfile"
