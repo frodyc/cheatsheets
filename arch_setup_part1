@@ -36,8 +36,11 @@ In case you don't know tmux or aren't familiar with the default bindings, do the
 - ctrl-b [ -> copy mode (you can move around with the arrow keys/vim controls, ctrl-u / ctrl-d)
 - ctrl-b o -> switch back to prompt pane
 
-If you had any existing partitions, make sure your disklabel type is gpt:
+If you had any existing partitions, make sure your disklabel type is GPT:
 fdisk -l /dev/sda
+
+If your disklabel is MBR or BSD, you can use this command to converyt to GPT:
+sgdisk -g /dev/sda
 
 Start the cfdisk utility:
 cfdisk /dev/sda
@@ -75,8 +78,9 @@ mount /dev/lvmgroup/root /mnt
 mkdir /mnt/home
 mkdir /mnt/boot
 mount /dev/lvmgroup/home /mnt/home
-mkfs.fat -F32 /dev/sda1
-mount /dev/sda1 /mnt/boot
+boot_partition='sda1'
+mkfs.fat -F32 /dev/"$boot_partition"
+mount /dev/"$boot_partition" /mnt/boot
 swapon /dev/lvmgroup/swap
 curl -s "https://www.archlinux.org/mirrorlist/?country=FR&protocol=https&use_mirror_status=on" | sed -e 's/^#Server/Server/' -e '/^#/d' > /etc/pacman.d/mirrorlist
 pacman -Syy
