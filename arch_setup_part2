@@ -32,7 +32,7 @@ cryptsetup luksAddKey /dev/"$drive_name" /etc/"$keyfile_name"
 
 Auto decryption and mount at boot:
 ```
-UUID=$(lsblk -f | grep "$drive_name " | awk '{print $3}')
+UUID=$(blkid -s UUID -o value /dev/"$drive_name")
 echo "$mapping_name UUID=$UUID /etc/$keyfile_name" >> /etc/crypttab
 echo "/dev/mapper/$mapping_name $mount_point ext4 defaults 0 2" >> /etc/fstab
 ```

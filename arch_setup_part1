@@ -104,7 +104,7 @@ mkinitcpio -p linux
 bootctl --path=/boot install
 cd /boot/loader
 echo -e 'default arch\ntimeout 3' > loader.conf
-UUID=$(lsblk -f | grep LUKS | awk '{print $3}')
+UUID=$(blkid -s UUID -o value /dev/sda2)
 echo "title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
