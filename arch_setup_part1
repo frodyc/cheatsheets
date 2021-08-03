@@ -13,7 +13,7 @@ I advise you to use tmux so you can have this file next to your command prompt
 and can copy and paste blocks of commands (delimited by ```)
 
 Download this file
-wget https://raw.githubusercontent.com/demivi/cheatsheets/master/arch_setup_part1
+curl https://raw.githubusercontent.com/demivi/cheatsheets/master/arch_setup_part1 --output arch_setup_part1
 
 Change relevant parts of this file beforehand if you want to copy and paste:
 -size and number of LVM groups
@@ -82,7 +82,7 @@ boot_partition='sda1'
 mkfs.fat -F32 /dev/"$boot_partition"
 mount /dev/"$boot_partition" /mnt/boot
 swapon /dev/lvmgroup/swap
-curl -s "https://www.archlinux.org/mirrorlist/?country=FR&protocol=https&use_mirror_status=on" | sed -e 's/^#Server/Server/' -e '/^#/d' > /etc/pacman.d/mirrorlist
+curl -sL "https://www.archlinux.org/mirrorlist/?country=FR&protocol=https&use_mirror_status=on" | sed -e 's/^#Server/Server/' -e '/^#/d' > /etc/pacman.d/mirrorlist
 pacman -Syy
 pacstrap /mnt base base-devel dhcpcd linux linux-firmware lvm2 mkinitcpio polkit vi
 ```
